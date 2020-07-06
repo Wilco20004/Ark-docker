@@ -5,7 +5,7 @@ Docker build for managing an ARK: Survival Evolved server.
 This image uses [Ark Server Tools](https://github.com/FezVrasta/ark-server-tools) to manage an ark server and is forked from [turzam/ark](https://hub.docker.com/r/turzam/ark/).
 
 *If you use an old volume, get the new arkmanager.cfg in the template directory.*  
-__Don't forget to use `docker pull boerngenschmidt/ark-docker` to get the latest version of the image__
+__Don't forget to use `docker pull wilco20004/forsaken_gaming` to get the latest version of the image__
 
 ## Features
  - Easy install (no steamcmd / lib32... to install)
@@ -18,18 +18,18 @@ __Don't forget to use `docker pull boerngenschmidt/ark-docker` to get the latest
 
 ## Usage
 Fast & Easy server setup :   
-`docker run -d -p 7778:7778 -p 7778:7778/udp -p 27015:27015 -p 27015:27015/udp -e SESSIONNAME=myserver -e ADMINPASSWORD="mypasswordadmin" --name ark boerngenschmidt/ark-docker`
+`docker run -d -p 7778:7778 -p 7778:7778/udp -p 27015:27015 -p 27015:27015/udp -e SESSIONNAME=myserver -e ADMINPASSWORD="mypasswordadmin" --name ark wilco20004/forsaken_gaming`
 
 You can map the ark volume to access config files :  
 `docker run -d -p 7778:7778 -p 7778:7778/udp -p 27015:27015 -p 27015:27015/udp -e SESSIONNAME=myserver -v /my/path/to/ark:/ark --name ark boerngenschmidt/ark-docker`  
 Then you can edit */my/path/to/ark/arkmanager.cfg* (the values override GameUserSetting.ini) and */my/path/to/ark/[GameUserSetting.ini/Game.ini]*
 
 You can manager your server with rcon if you map the rcon port (you can rebind the rcon port with docker):  
-`docker run -d -p 7778:7778 -p 7778:7778/udp -p 27015:27015 -p 27015:27015/udp -p 32330:32330  -e SESSIONNAME=myserver --name ark boerngenschmidt/ark-docker`  
+`docker run -d -p 7778:7778 -p 7778:7778/udp -p 27015:27015 -p 27015:27015/udp -p 32330:32330  -e SESSIONNAME=myserver --name ark wilco20004/forsaken_gaming`  
 
 You can change server and steam port to allow multiple servers on same host:  
 *(You can't just rebind the port with docker. It won't work, you need to change STEAMPORT & SERVERPORT variable)*
-`docker run -d -p 7779:7779 -p 7779:7779/udp -p 27016:27016 -p 27016:27016/udp -p 32331:32330  -e SESSIONNAME=myserver2 -e SERVERPORT=27016 -e STEAMPORT=7779 --name ark2 boerngenschmidt/ark-docker`  
+`docker run -d -p 7779:7779 -p 7779:7779/udp -p 27016:27016 -p 27016:27016/udp -p 32331:32330  -e SESSIONNAME=myserver2 -e SERVERPORT=27016 -e STEAMPORT=7779 --name ark2 wilco20004/forsaken_gaming`  
 
 You can check your server with :  
 `docker exec ark arkmanager status` 
@@ -85,7 +85,7 @@ To add mods, you only need to change the variable ark_GameModIds in *arkmanager.
   -e ADMINPASSWORD="mypasswordadmin" \
   -e TZ=Europe/Berlin \
   -v /my/path/to/ark:/ark \
-  boerngenschmidt/ark-docker
+  wilco20004/forsaken_gaming
   ```
 - Wait for ark to be downloaded installed and launched, then Ctrl+C to stop the server.
 - Edit */my/path/to/ark/GameUserSetting.ini and Game.ini*
