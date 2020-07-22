@@ -1,12 +1,12 @@
 FROM centos:7
-MAINTAINER boerngenschmidt
+MAINTAINER Willem Coetzee
 
 # Var for first config
-ENV SESSIONNAME="Ark Docker" \
+ENV SESSIONNAME="Ark Test Server" \
     SERVERMAP="TheIsland" \
     SERVERPASSWORD="" \
     ADMINPASSWORD="adminpassword" \
-    MAX_PLAYERS=70 \
+    MAX_PLAYERS=30 \
     UPDATEONSTART=1 \
     BACKUPONSTART=1 \
     SERVERPORT=27015 \
