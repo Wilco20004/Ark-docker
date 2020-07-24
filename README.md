@@ -6,7 +6,7 @@ This image uses [Ark Server Tools](https://github.com/FezVrasta/ark-server-tools
 
 *If you use an old volume, get the new arkmanager.cfg in the template directory.*
 
-__Don't forget to use `docker pull r15ch13/arkcluster` to get the latest version of the image__
+__Don't forget to use `docker pull wilco20004/ark_server_v1` to get the latest version of the image__
 
 ## Features
  - Easy install (no steamcmd / lib32... to install)
@@ -15,96 +15,51 @@ __Don't forget to use `docker pull r15ch13/arkcluster` to get the latest version
  - `docker stop` is a clean stop
  - Auto upgrading of arkmanager
 
-## Usage
-Fast & Easy cluster setup via docker compose:
+# Recommended Usages
 
-```yaml
-version: "3.5"
+## Crontab - Job automation
+ You can easily configure automatic update and backup.  
+ If you edit the file `/my/path/to/ark/crontab` you can add your crontab job.  
+ For example :  
+ ```
+ # Update the server every hours  
+ 0 * * * * arkmanager update --warn --update-mods >> /ark/log/crontab.log 2>&1    
+ # Backup the server each day at 00:00  `  
+ 0 0 * * * arkmanager backup >> /ark/log/crontab.log 2>&1
+ ```  
+ *You can check [this website](http://www.unix.com/man-page/linux/5/crontab/) for more information on cron.*
 
-services:
-  island:
-    image: r15ch13/arkcluster:latest
-    deploy:
-      mode: global
-    environment:
-      CRON_AUTO_UPDATE: "0 */3 * * *"
-      CRON_AUTO_BACKUP: "0 */1 * * *"
-      UPDATEONSTART: 1
-      BACKUPONSTART: 1
-      BACKUPONSTOP: 1
-      WARNONSTOP: 1
-      USER_ID: 1000
-      GROUP_ID: 1000
-      TZ: "UTC"
-      MAX_BACKUP_SIZE: 500
-      SERVERMAP: "TheIsland"
-      SESSION_NAME: "ARK Cluster TheIsland"
-      MAX_PLAYERS: 15
-      RCON_ENABLE: "True"
-      RCON_PORT: 32330
-      GAME_PORT: 7778
-      QUERY_PORT: 27015
-      RAW_SOCKETS: "False"
-      SERVER_PASSWORD: ""
-      ADMIN_PASSWORD: "keepmesecret"
-      SPECTATOR_PASSWORD: "keepmesecret"
-      MODS: "731604991"
-      CLUSTER_ID: "keepmesecret"
-      KILL_PROCESS_TIMEOUT: 300
-      KILL_ALL_PROCESSES_TIMEOUT: 300
-    volumes:
-      - server_island:/ark
-      - cluster:/cluster
-    ports:
-      - "32330:32330/tcp"
-      - "7777:7777/udp"
-      - "7778:7778/udp"
-      - "27015:27015/udp"
+ After updating the `/my/path/to/ark/crontab` please run the command   
+ `docker exec ark crontab -u steam /ark/crontab`
 
-  island:
-    image: r15ch13/arkcluster:latest
-    deploy:
-      mode: global
-    environment:
-      CRON_AUTO_UPDATE: "15 */3 * * *"
-      CRON_AUTO_BACKUP: "15 */1 * * *"
-      UPDATEONSTART: 1
-      BACKUPONSTART: 1
-      BACKUPONSTOP: 1
-      WARNONSTOP: 1
-      USER_ID: 1000
-      GROUP_ID: 1000
-      TZ: "UTC"
-      MAX_BACKUP_SIZE: 500
-      SERVERMAP: "Valguero_P"
-      SESSION_NAME: "ARK Cluster Valguero"
-      MAX_PLAYERS: 15
-      RCON_ENABLE: "False"
-      RCON_PORT: 32331
-      GAME_PORT: 7780
-      QUERY_PORT: 27016
-      RAW_SOCKETS: "False"
-      SERVER_PASSWORD: ""
-      ADMIN_PASSWORD: "keepmesecret"
-      SPECTATOR_PASSWORD: "keepmesecret"
-      MODS: "731604991"
-      CLUSTER_ID: "keepmesecret"
-      KILL_PROCESS_TIMEOUT: 300
-      KILL_ALL_PROCESSES_TIMEOUT: 300
-    volumes:
-      - server_valguero:/ark
-      - cluster:/cluster
-    ports:
-      - "32331:32331/tcp"
-      - "7779:7779/udp"
-      - "7780:7780/udp"
-      - "27016:27016/udp"
+## Simple container
+ - First run  
+  ```Bash
+  docker run -it --name ark \
+   -e SESSIONNAME=myserver \
+   -e SERVERMAP: "TheIsland" \
+   -e ADMINPASSWORD="mypasswordadmin" \
+   -p 7778:7778 -p 7778:7778/udp \
+   -p 27015:27015 -p 27015:27015/udp \
+   -p 32330:32330 \
+   -e TZ=UTC \
+   -e USER_ID: 1000 \
+   -e GROUP_ID: 1000
+   -v /my/path/to/ark:/ark \
+   -v /my/path/to/cluster:/cluster \
+   wilco20004/ark_server_v1
+   ```
+ - Wait for ark to be downloaded installed and launched, then Ctrl+C to stop the server.
+ - Edit */my/path/to/ark/GameUserSetting.ini and Game.ini*
+ - Edit */my/path/to/ark/arkserver.cfg* to add mods and configure warning time.
+ - Add auto update every day and autobackup by editing */my/path/to/ark/crontab*. [See](#crontab---job-automation)
+ - Start the container `docker start ark`
+ - Check your server with : `docker exec ark arkmanager status`
 
-volumes:
-  server_island:
-  server_valguero:
-  cluster:
-```
+## Expose
+ + Port : __STEAMPORT__ : Steam port (default: 7778)
+ + Port : __SERVERPORT__ : server port (default: 27015)
+ + Port : __32330__ : rcon port
 
 ## Volumes
 + __/ark__ : Working directory :
